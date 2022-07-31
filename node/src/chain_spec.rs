@@ -151,6 +151,10 @@ fn testnet_genesis(
 			// Assign network admin rights.
 			key: Some(root_key),
 		},
+		staked_balances: Default::default(),
+		democracy: Default::default(),
+		technical_committee: Default::default(),
+		council: Default::default(),
 		transaction_payment: Default::default(),
 	}
 }
