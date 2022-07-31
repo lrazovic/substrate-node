@@ -9,7 +9,7 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 use frame_support::traits::{EitherOfDiverse, EqualPrivilegeOnly};
 use frame_system::EnsureRoot;
 use lrazovic_pallet as simple_pool;
-use pallet_collective;
+
 use pallet_grandpa::{
 	fg_primitives, AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList,
 };
@@ -244,9 +244,7 @@ impl pallet_balances::Config<MainToken> for Runtime {
 	type MaxLocks = ConstU32<50>;
 	type MaxReserves = ();
 	type ReserveIdentifier = [u8; 8];
-	/// The type for recording an account's balance.
 	type Balance = Balance;
-	/// The ubiquitous event type.
 	type Event = Event;
 	type DustRemoval = ();
 	type ExistentialDeposit = ConstU128<500>;
@@ -261,7 +259,7 @@ impl pallet_balances::Config<StakedToken> for Runtime {
 	type Event = Event;
 	type ExistentialDeposit = ConstU128<1>;
 	type AccountStore = System;
-	type WeightInfo = ();
+	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 	type MaxLocks = ();
 	type MaxReserves = ();
 	type ReserveIdentifier = [u8; 8];
@@ -339,17 +337,16 @@ parameter_types! {
 	pub const EnactmentPeriod: BlockNumber = 30 * 24 * 60 * MINUTES;
 	pub const CooloffPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
 	pub const MaxProposals: u32 = 100;
-		pub const PreimageMaxSize: u32 = 4096 * 1024;
-		pub const PreimageBaseDeposit: Balance = 1 * DOLLARS;
-		// One cent: $10,000 / MB
-		pub const PreimageByteDeposit: Balance = 1 * CENTS;
+	pub const PreimageMaxSize: u32 = 4096 * 1024;
+	pub const PreimageBaseDeposit: Balance = DOLLARS;
+	pub const PreimageByteDeposit: Balance = CENTS;
 
 }
 
 impl pallet_democracy::Config for Runtime {
 	type Proposal = Call;
 	type Event = Event;
-	type Currency = Balances;
+	type Currency = StakedBalances;
 	type EnactmentPeriod = EnactmentPeriod;
 	type LaunchPeriod = LaunchPeriod;
 	type VotingPeriod = VotingPeriod;
@@ -400,7 +397,7 @@ impl pallet_democracy::Config for Runtime {
 impl simple_pool::Config for Runtime {
 	type Event = Event;
 	type MainToken = Balances;
-	type StakedToken = Balances;
+	type StakedToken = StakedBalances;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -468,7 +465,6 @@ mod benches {
 		[frame_system, SystemBench::<Runtime>]
 		[pallet_balances, Balances]
 		[pallet_timestamp, Timestamp]
-		[pallet_template, TemplateModule]
 	);
 }
 
