@@ -10,6 +10,10 @@ use frame_support::traits::{EitherOfDiverse, EqualPrivilegeOnly};
 use frame_system::EnsureRoot;
 use lrazovic_pallet as simple_pool;
 
+use frame_support::{
+	instances::{Instance1, Instance2},
+	traits::StorageMapShim,
+};
 use pallet_grandpa::{
 	fg_primitives, AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList,
 };
@@ -241,14 +245,19 @@ impl pallet_timestamp::Config for Runtime {
 
 type MainToken = pallet_balances::Instance1;
 impl pallet_balances::Config<MainToken> for Runtime {
-	type MaxLocks = ConstU32<50>;
+	type MaxLocks = ConstU32<64>;
 	type MaxReserves = ();
 	type ReserveIdentifier = [u8; 8];
 	type Balance = Balance;
 	type Event = Event;
 	type DustRemoval = ();
-	type ExistentialDeposit = ConstU128<500>;
-	type AccountStore = System;
+	type ExistentialDeposit = ConstU128<1>;
+	type AccountStore = StorageMapShim<
+		pallet_balances::pallet::Account<Runtime, Instance1>,
+		frame_system::Provider<Runtime>,
+		AccountId,
+		pallet_balances::AccountData<Balance>,
+	>;
 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 }
 
@@ -258,7 +267,12 @@ impl pallet_balances::Config<StakedToken> for Runtime {
 	type DustRemoval = ();
 	type Event = Event;
 	type ExistentialDeposit = ConstU128<1>;
-	type AccountStore = System;
+	type AccountStore = StorageMapShim<
+		pallet_balances::pallet::Account<Runtime, Instance2>,
+		frame_system::Provider<Runtime>,
+		AccountId,
+		pallet_balances::AccountData<Balance>,
+	>;
 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 	type MaxLocks = ();
 	type MaxReserves = ();

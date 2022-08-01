@@ -3366,10 +3366,12 @@ dependencies = [
 [[package]]
 name = "lrazovic_pallet"
 version = "0.1.0"
+source = "git+https://github.com/lrazovic/lrazovic_pallet.git#ab6f596c29b0c2212fa7180247ab61e665d1d98d"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "pallet-assets",
  "pallet-democracy",
  "pallet-scheduler",
  "pallet-staking",
@@ -4004,6 +4006,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6ff55baddef9e4ad00f88b6c743a2a8062d4c6ade126c2a528644b8e444d52ce"
 dependencies = [
  "stable_deref_trait",
+]
+
+[[package]]
+name = "pallet-assets"
+version = "4.0.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.26#e8a7d161f39db70cb27fdad6c6e215cf493ebc3b"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-runtime",
+ "sp-std",
 ]
 
 [[package]]
