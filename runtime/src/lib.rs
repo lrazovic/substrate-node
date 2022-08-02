@@ -102,8 +102,8 @@ pub mod opaque {
 //   https://docs.substrate.io/v3/runtime/upgrades#runtime-versioning
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("node-template"),
-	impl_name: create_runtime_str!("node-template"),
+	spec_name: create_runtime_str!("node-lrazovic"),
+	impl_name: create_runtime_str!("node-lrazovic"),
 	authoring_version: 1,
 	// The version of the runtime specification. A full node will not attempt to use its native
 	//   runtime in substitute for the on-chain Wasm runtime unless all of `spec_name`,
@@ -246,7 +246,7 @@ impl pallet_timestamp::Config for Runtime {
 type MainToken = pallet_balances::Instance1;
 impl pallet_balances::Config<MainToken> for Runtime {
 	type MaxLocks = ConstU32<64>;
-	type MaxReserves = ();
+	type MaxReserves = ConstU32<64>;
 	type ReserveIdentifier = [u8; 8];
 	type Balance = Balance;
 	type Event = Event;
@@ -266,14 +266,14 @@ impl pallet_balances::Config<StakedToken> for Runtime {
 	type Balance = Balance;
 	type DustRemoval = ();
 	type Event = Event;
-	type ExistentialDeposit = ConstU128<1>;
+	type ExistentialDeposit = ConstU128<0>;
 	type AccountStore = StorageMapShim<
 		pallet_balances::pallet::Account<Runtime, Instance2>,
 		frame_system::Provider<Runtime>,
 		AccountId,
 		pallet_balances::AccountData<Balance>,
 	>;
-	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
+	type WeightInfo = ();
 	type MaxLocks = ();
 	type MaxReserves = ();
 	type ReserveIdentifier = [u8; 8];
