@@ -6,12 +6,15 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
-use frame_support::traits::{EitherOfDiverse, EqualPrivilegeOnly};
+use frame_support::{
+	traits::{EitherOfDiverse, EqualPrivilegeOnly},
+	PalletId,
+};
 use frame_system::EnsureRoot;
 use lrazovic_pallet as simple_pool;
 
 use frame_support::{
-	instances::{Instance1, Instance2},
+	instances::{Instance1},
 	traits::StorageMapShim,
 };
 use pallet_grandpa::{
@@ -267,12 +270,7 @@ impl pallet_balances::Config<StakedToken> for Runtime {
 	type DustRemoval = ();
 	type Event = Event;
 	type ExistentialDeposit = ConstU128<0>;
-	type AccountStore = StorageMapShim<
-		pallet_balances::pallet::Account<Runtime, Instance2>,
-		frame_system::Provider<Runtime>,
-		AccountId,
-		pallet_balances::AccountData<Balance>,
-	>;
+	type AccountStore = System;
 	type WeightInfo = ();
 	type MaxLocks = ();
 	type MaxReserves = ();
@@ -347,8 +345,8 @@ parameter_types! {
 	pub const LaunchPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
 	pub const VotingPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
 	pub const FastTrackVotingPeriod: BlockNumber = 3 * 24 * 60 * MINUTES;
-	pub const MinimumDeposit: Balance = 100 * DOLLARS;
-	pub const EnactmentPeriod: BlockNumber = 30 * 24 * 60 * MINUTES;
+	pub const MinimumDeposit: Balance = 2 * MILLICENTS;
+	pub const EnactmentPeriod: BlockNumber = MINUTES;
 	pub const CooloffPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
 	pub const MaxProposals: u32 = 100;
 	pub const PreimageMaxSize: u32 = 4096 * 1024;
@@ -408,10 +406,15 @@ impl pallet_democracy::Config for Runtime {
 	type MaxProposals = MaxProposals;
 }
 
+parameter_types! {
+	pub const SimplePoolId: PalletId = PalletId(*b"simplpol");
+}
+
 impl simple_pool::Config for Runtime {
 	type Event = Event;
 	type MainToken = Balances;
 	type StakedToken = StakedBalances;
+	type PalletId = SimplePoolId;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
