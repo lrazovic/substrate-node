@@ -342,12 +342,12 @@ impl pallet_collective::Config<TechnicalCollective> for Runtime {
 }
 
 parameter_types! {
-	pub const LaunchPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
-	pub const VotingPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
+	pub const LaunchPeriod: BlockNumber = 2 * MINUTES;
+	pub const VotingPeriod: BlockNumber = 2 * MINUTES;
 	pub const FastTrackVotingPeriod: BlockNumber = 3 * 24 * 60 * MINUTES;
 	pub const MinimumDeposit: Balance = 2 * MILLICENTS;
 	pub const EnactmentPeriod: BlockNumber = MINUTES;
-	pub const CooloffPeriod: BlockNumber = 28 * 24 * 60 * MINUTES;
+	pub const CooloffPeriod: BlockNumber = 2 * MINUTES;
 	pub const MaxProposals: u32 = 100;
 	pub const PreimageMaxSize: u32 = 4096 * 1024;
 	pub const PreimageBaseDeposit: Balance = DOLLARS;
